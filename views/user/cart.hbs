@@ -1,0 +1,100 @@
+<section>
+    <div class="container">
+<table class="table mt-3">
+  <thead>
+    <tr>
+     
+      <th scope="col">Item</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#each products}}
+    <tr>
+  
+    <td><img style="width:65px;height:65px" src="/product-images/{{this.product._id}}.jpg" alt=""></td>
+      <td>{{this.product.name}}</td>
+      <td>{{this.product.Price}}</td>
+     
+      <td>
+          <button class="btn btn-danger mr-3" id="quantity" onclick="changequantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+     <span id="{{this.product._id}}">{{this.quantity}}</span>
+          <button class="btn btn-success ml-3" onclick="changequantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+      </td>
+      <td>
+       <button class="btn btn-danger "  onclick=" remove('{{this._id}}','{{this.product._id}}')">Remove</button>
+        </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<hr>
+    </div>          
+</section>
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-6">
+        Total:<span id="totalpro">{{total}}</span>
+       
+      </div>
+          <a href="/cart-checkout" class="btn btn-primary float-right ml-5">CheckOut</a>
+    </div>
+
+  </div>
+</section>
+<script>
+  function changequantity(cartid,proid,count,userid){
+    let quantity=parseInt(document.getElementById(proid).innerHTML)
+    
+    count=parseInt(count)
+   
+    $.ajax({
+      url:'/change-product-quantity',
+      data:{
+        
+        cart:cartid,
+        product:proid,
+        count:count,
+        quantity:quantity,
+        
+      },
+      method:'post',
+      success:(response)=>{
+        console.log(response.total)
+        if(response.removeProduct){
+          alert("Product Remove from Cart")
+          location.reload()
+                      
+        }else{
+          document.getElementById(proid).innerHTML=quantity+count
+         
+
+        }
+      }
+    })
+  }
+  </script>
+<script>
+   function remove(cartid,proid){
+    $.ajax({
+      url:'/remove-product-cart',
+      data:{
+        cart:cartid,
+        product:proid
+      },
+      method:'post',
+      success:(response)=>{
+        if(response.removeProduct){
+          alert("Are Sure you Want to Remove")
+          location.reload()
+                      
+        }
+       
+      }
+    })
+    
+  } 
+</script>

@@ -1,0 +1,47 @@
+<section>
+    <form action="/" id="form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-12 mt-2">
+                <h1>Check Out Methods</h1>
+              
+                <hr>
+                <h1 class="float-right mb-4">Total:{{total}}</h1>
+                
+                   <div class="form-check mt-3">
+  <input class="form-check-input" type="radio" name="exampleRadios"  id="cod" value="cod" checked>
+  <label class="form-check-label" for="exampleRadios1">
+    COD
+  </label>
+</div>
+<div class="form-check mt-3">
+  <input class="form-check-input" type="radio" name="exampleRadios" id="online"  value="online" checked>
+  <label class="form-check-label" for="exampleRadios2">
+    Online Payment
+  </label>
+</div>
+<button class="btn btn-primary mt-5" onclick="payment()">Continue</button>
+            </div>
+        </div>
+    </div>
+    </form>
+</section>
+<script>
+function  payment(){
+   
+    if(document.getElementById('cod').checked){
+        
+         var val=document.getElementById("cod").value
+        
+        document.getElementById("form").action=val;
+    }else if(document.getElementById('online').checked){
+        
+        let val=document.getElementById("online").value
+        
+        document.getElementById("form").action=val;
+    }else{
+        console.log("opps error")
+    }
+}
+    
+</script>
