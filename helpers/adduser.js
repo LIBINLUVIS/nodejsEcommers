@@ -149,7 +149,7 @@ module.exports={
         }
         ).then((response)=>{
            
-            resolve(true)
+            resolve({status:true})
            })
           }
       })
@@ -203,7 +203,7 @@ totalprice:(userid)=>{
               }
           
           ]).toArray()
-       
+         
           resolve(total[0].total)
          
       })
