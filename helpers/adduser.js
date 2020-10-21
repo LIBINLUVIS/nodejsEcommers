@@ -83,7 +83,7 @@ module.exports={
   },
   cartitems:(userid)=>{
       return new Promise(async(resolve,reject)=>{
-        let usercart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})
+        let usercart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})//if usercart is there check
           let cartitems=await db.get().collection(collection.CART_COLLECTION).aggregate([
               {
                   $match:{user:objectId(userid)}
@@ -166,7 +166,7 @@ removecartproduct:(details)=>{
 },
 totalprice:(userid)=>{
 
-    return new Promise(async(resolve,reject)=>{
+    return new Promise(async(resolve,reject)=>{//checking the user is having the cart or not 
        
           let total=await db.get().collection(collection.CART_COLLECTION).aggregate([
               {
@@ -237,6 +237,48 @@ getcartproductlist:(userid)=>{
         let cart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})
        
         resolve(cart.products)
+    })
+},
+getorders:(userid)=>{
+    return new Promise(async (resolve,reject)=>{
+        let orders=await db.get().collection(collection.ORDER_COLLECTION).find({userid:objectId(userid)}).toArray()
+        resolve(orders)
+
+    })
+},
+getorderproduct:(orderid)=>{
+    return new Promise(async(resolve,reject)=>{
+        let orderitems=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $match:{_id:objectId(orderid)}
+            },
+            {
+                $unwind:'$products'
+            },
+            {
+                $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity'
+                }
+            },
+
+            {
+                $lookup:{
+                    from:collection.PRODUCT_COLLECTION,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'product'
+                }
+            },
+            {
+                $project:{
+                    item:1,quantity:1,product:{$arrayElemAt:['$product',0]}
+                }
+            }
+        
+        ]).toArray()
+        resolve(orderitems)
+
     })
 }
 

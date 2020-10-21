@@ -77,11 +77,12 @@ router.post("/login",function(req,res){
   })
 });
 router.get('/cart',verifylogin,async(req,res)=>{
-// let user=req.session.user
+// let user=req.session.user                   
 let products=await adduser.cartitems(req.session.user._id)
+console.log(req.session.user._id)
 let total=await adduser.totalprice(req.session.user._id)
 
-res.render('user/cart',{products,total,user:req.session.user._id})
+res.render('user/cart',{products,total,user:req.session.user._id})//user: check
    
 })
 
@@ -94,8 +95,6 @@ router.post('/change-product-quantity',(req,res,next)=>{
   
    adduser.changequantity(req.body).then(async(response)=>{ 
     response.total=await adduser.totalprice(req.body.user)
-   
-
       res.json(response)
    })
 })
@@ -121,6 +120,16 @@ router.post('/cod-payment',async(req,res)=>{
   adduser.placeorder(req.body,products,totalprice).then((response)=>{
    res.render('user/cod-success',{user})
   })
+})
+router.get('/orders',async(req,res)=>{
+  let orders=await adduser.getorders(req.session.user._id)
+  console.log(orders)
+  res.render('user/orderlist',{user:req.session.user,orders,orders})
+})
+router.get('/view-order-products/:id',async(req,res)=>{
+  let products=await adduser.getorderproduct(req.params.id)
+  
+  res.render('user/view-order-products',{user:req.session.user,products})
 })
 
 router.get('/online',(req,res)=>{
