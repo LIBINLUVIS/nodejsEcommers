@@ -114,6 +114,15 @@ router.get('/cod',(req,res)=>{
   let user=req.session.user
   res.render('user/payment-cod',{user})
 })
+router.post('/cod-payment',async(req,res)=>{
+  let user=req.session.user
+  let products=await adduser.getcartproductlist(req.session.user._id)
+  let totalprice=await adduser.totalprice(req.body.userid)
+  adduser.placeorder(req.body,products,totalprice).then((response)=>{
+   res.render('user/cod-success',{user})
+  })
+})
+
 router.get('/online',(req,res)=>{
   let user=req.session.user
   res.render('user/payment-online',{user})

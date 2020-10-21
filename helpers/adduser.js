@@ -208,6 +208,37 @@ totalprice:(userid)=>{
          
       })
 
+},
+placeorder:(order,products,total)=>{
+    return new Promise((resolve,reject)=>{
+      console.log(order,products,total)
+       let orderobj={
+           SHIPPING:{
+               mobile:order.mobile,
+               address:order.address,
+               email:order.email
+           },
+          userid:objectId(order.userid),
+          paymentMethod:order.method,
+          products:products,
+          totalprice:total
+       }
+    db.get().collection(collection.ORDER_COLLECTION).insertOne(orderobj).then((response)=>{
+        db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(order.userid)})
+          resolve()
+       })
+    })
+
+
+},
+getcartproductlist:(userid)=>{
+    
+    return new Promise(async(resolve,reject)=>{
+        let cart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})
+       
+        resolve(cart.products)
+    })
 }
+
 
 }
