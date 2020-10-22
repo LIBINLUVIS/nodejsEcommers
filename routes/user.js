@@ -5,6 +5,7 @@ var productHelpers=require('../helpers/product-helpers');
 const adduser=require('../helpers/adduser');
 const { response } = require('../app');
 const { as } = require('pg-promise');
+const { json } = require('express');
 const verifylogin=(req,res,next)=>{
    if(req.session.loggedIn){
      next()
@@ -131,10 +132,25 @@ router.get('/view-order-products/:id',async(req,res)=>{
   
   res.render('user/view-order-products',{user:req.session.user,products})
 })
-
 router.get('/online',(req,res)=>{
   let user=req.session.user
   res.render('user/payment-online',{user})
+})
+
+router.post('/online-razorpay',async(req,res)=>{
+  
+ 
+  let products=await adduser.getcartproductlist(req.session.user._id)
+  let totalprice=await adduser.totalprice(req.body.userid)
+  adduser.placeorder(req.body,products,totalprice).then((orderid)=>{
+    adduser.razorpay(orderid,totalprice).then((response)=>{
+         res.json(response)
+    })
+   })
+  
+})
+router.post('/verify-payment',(req,res)=>{
+  
 })
 
 

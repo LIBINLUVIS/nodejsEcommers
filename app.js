@@ -11,17 +11,7 @@ var app = express();
 var db=require('./config/connection');
 var fileUpload=require('express-fileupload');
 const { store } = require('express-session');
-// var session=require('express-session');
-// var MongoDBStore = require('connect-mongodb-session')(session);
-// var cart = new MongoDBStore(
-//   {
-//     uri: 'mongodb://localhost:27017',
-//     databaseName:'shopping' ,
-    
-//   },
-//   function(error) {
-//     // Should have gotten an error
-//   });
+
 
 
 // view engine setup

@@ -4,6 +4,11 @@ const bcrypt=require('bcrypt')
 const { response } = require('../app')
 const { BadGateway } = require('http-errors')
 var objectId=require('mongodb').ObjectId
+const Razorpay=require('razorpay')
+var instance = new Razorpay({
+    key_id: 'rzp_test_d6gKhys9JAolw2',
+    key_secret: '0ZzkKw2lL9oqBb8fhZN5N4ix',
+  });
 module.exports={
     dosignup:(userData)=>{
         return new Promise(async(resolve,reject)=>{  
@@ -225,7 +230,7 @@ placeorder:(order,products,total)=>{
        }
     db.get().collection(collection.ORDER_COLLECTION).insertOne(orderobj).then((response)=>{
         db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(order.userid)})
-          resolve()
+          resolve(response.ops[0]._id)
        })
     })
 
@@ -279,6 +284,19 @@ getorderproduct:(orderid)=>{
         ]).toArray()
         resolve(orderitems)
 
+    })
+},
+razorpay:(orderid,totalprice)=>{
+    return new Promise((resolve,reject)=>{
+        var options = {
+            amount: totalprice,  // amount in the smallest currency unit
+            currency: "INR",
+            receipt: ""+orderid
+          };
+          instance.orders.create(options, function(err, order) {
+            console.log("test",order);
+            resolve(order)
+          });
     })
 }
 

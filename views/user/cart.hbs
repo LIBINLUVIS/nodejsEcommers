@@ -1,15 +1,18 @@
-<section>
-    <div class="container">
+<div class="container">
+  <div class="row">
+   
 <table class="table mt-3">
+<div class="col-md-12 col-12">
   <thead>
     <tr>
-     
       <th scope="col">Item</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
       <th scope="col">Quantity</th>
     </tr>
   </thead>
+ </div>
+<div class="col-md-12 col-12">
   <tbody>
       {{#each products}}
     <tr>
@@ -29,22 +32,24 @@
     </tr>
     {{/each}}
   </tbody>
-</table>
-<hr>
-    </div>          
-</section>
-<section>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-6">
-     <h3>Total:<span id='total'>{{total}}</span></h3>
-       
-      </div>
-          <a href="/cart-checkout" class="btn btn-primary float-right ml-5">CheckOut</a>
-    </div>
-
   </div>
-</section>
+</table> 
+</div>
+</div>
+<hr>
+             
+
+<div class="container">
+<div class="row">
+  <div class="col-md-12 col-12">
+    <section>
+     <h3>Total:<span id='total'>{{total}}</span></h3>
+          <a href="/cart-checkout" class="btn btn-primary float-right ml-5">CheckOut</a>
+    </section>
+  </div>
+</div>
+</div> 
+
 <script>
   function changequantity(cartid,proid,userid,count){
     let quantity=parseInt(document.getElementById(proid).innerHTML)
