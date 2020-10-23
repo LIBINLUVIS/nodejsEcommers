@@ -78,13 +78,16 @@ router.post("/login",function(req,res){
   })
 });
 router.get('/cart',verifylogin,async(req,res)=>{
-// let user=req.session.user                   
-let products=await adduser.cartitems(req.session.user._id)
-console.log(req.session.user._id)
-let total=await adduser.totalprice(req.session.user._id)
+let count=await adduser.procount(req.session.user._id)
 
-res.render('user/cart',{products,total,user:req.session.user._id})//user: check
-   
+if(count!=0){
+  let products=await adduser.cartitems(req.session.user._id)
+let total=await adduser.totalprice(req.session.user._id)
+res.render('user/cart',{products,total,user:req.session.user._id})
+}            
+else{
+   res.render('user/cart')
+}  
 })
 
 router.get('/add-to-cart/:id',(req,res)=>{

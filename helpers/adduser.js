@@ -65,15 +65,15 @@ module.exports={
                 })
             }else{
             
-            db.get().collection(collection.CART_COLLECTION)
-            .updateOne({user:objectId(userid)},
-            {
-                $push:{products:proobj}
-            }
-            ).then((response)=>{
-                resolve()
-            })
-            }
+             db.get().collection(collection.CART_COLLECTION)
+             .updateOne({user:objectId(userid)},
+             {
+                 $push:{products:proobj}
+             }
+             ).then((response)=>{
+                 resolve()
+             })
+             }
         }else{
             let cartobj={
                 user:objectId(userid),
@@ -83,12 +83,14 @@ module.exports={
                 resolve()
             })
         }
+
      })
     
   },
+
   cartitems:(userid)=>{
       return new Promise(async(resolve,reject)=>{
-        let usercart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})//if usercart is there check
+      
           let cartitems=await db.get().collection(collection.CART_COLLECTION).aggregate([
               {
                   $match:{user:objectId(userid)}
@@ -172,7 +174,9 @@ removecartproduct:(details)=>{
 totalprice:(userid)=>{
 
     return new Promise(async(resolve,reject)=>{//checking the user is having the cart or not 
-       
+        let cart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})
+        if(cart){
+
           let total=await db.get().collection(collection.CART_COLLECTION).aggregate([
               {
                   $match:{user:objectId(userid)}
@@ -208,9 +212,12 @@ totalprice:(userid)=>{
               }
           
           ]).toArray()
-         
           resolve(total[0].total)
-         
+          
+        }else{
+
+          console.log("cart null")
+        }
       })
 
 },
@@ -298,7 +305,19 @@ razorpay:(orderid,totalprice)=>{
             resolve(order)
           });
     })
-}
+},
+procount:(userid)=>{
+    return new Promise(async(resolve,reject)=>{
+        let cart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userid)})
+        if(cart){
+            count=cart.products.length
+         }
+      else{
+            count=null
+      }
+        resolve(count)
+    })
+},
 
 
 }
