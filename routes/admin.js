@@ -4,17 +4,25 @@ var router = express.Router();
 var productHelpers=require('../helpers/product-helpers');
 const { route } = require('./user');
 const { as } = require('pg-promise');
-// const productHelpers = require('./helpers/product-helpers');
 
-/* GET home page. */
+
+
 router.get('/', function(req, res, next) {
-  productHelpers.getAllProducts().then((products)=>{
-    console.log(products)
-    
-    res.render('admin/view-products', {products,admin:true});
-    
-  })
+
+  res.render('admin/login', {admin:true});
   
+});
+router.post('/login', function(req, res) {
+let details=req.body;
+console.log(details)
+if(details.username=="Libin" && details.password=="12345"){
+  productHelpers.getAllProducts().then((products)=>{
+    res.render('admin/view-products', {products,admin:true});
+    })
+}else{
+  console.log("login failed")
+}
+
 });
 
 router.get("/add-product",function(req,res){
@@ -62,6 +70,21 @@ productHelpers.editproduct(req.params.id,req.body).then(()=>{
     image.mv('./public/product-images/'+id+'.jpg')
   }
 })
+})
+router.get('/all-orders',(req,res)=>{
+ productHelpers.pickorders().then((items)=>{
+    res.render('admin/all-orders',{items,admin:true})
+ })
+
+})
+router.get('/view-order-products/:id',async(req,res)=>{
+  let products=await productHelpers.getorderproduct(req.params.id)
+  res.render('admin/order-products',{user:req.session.user,products})
+})
+router.get('/all-users',(req,res)=>{
+  productHelpers.getallusers().then((users)=>{
+    res.render('admin/listusers',{users,admin:true})
+  })
 })
 
 module.exports = router;

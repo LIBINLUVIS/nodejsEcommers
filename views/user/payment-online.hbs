@@ -1,5 +1,6 @@
 <section>
 <div class="container">
+  <h1 class="text-center">Order Form</h1>
     <div class="row">
        <div class="col-md-6 col-12">
   <form action="" method="POST" id="online-form">
@@ -17,8 +18,10 @@
    <div class="form-group">
   <label for="inputAddress">Mobile</label>
     <input type="tel" class="form-control" name="mobile"  id="inputAddress" >
+     <input type="text" class="form-control" name="method" value="ONLINE"  id="inputAddress" hidden>
+      <input type="text" class="form-control" name="username" value="{{user.fname}}"  id="inputAddress" hidden>
      <input type="text" class="form-control" name="userid" value="{{user._id}}"  id="inputAddress" hidden>
-     {{!--   --}}
+     
   </div>
   <button type="submit" class="btn btn-primary">Check me out</button>
 </form>
@@ -49,9 +52,7 @@
     "image": "/images/shoppingcart.png",
     "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
     "handler": function (response){
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature)
+      
         verifypayment(response,order)
     },
     "prefill": {
@@ -76,7 +77,14 @@ rzp1.open();
            payment,
            order
          },
-         method:'POST'
+         method:'POST',
+         success:(response)=>{
+           if(response.status){
+             location.href = "/online-success"
+           }else{
+             alert("payment failed")
+           }
+         }
        })
      }
 </script>

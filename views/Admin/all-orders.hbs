@@ -1,13 +1,13 @@
 <section>
     <div class="container">
-      <h1 class="text-center">Your Orders</h1>
       <div class="row mt-4">
-      
+        <h1 class="text-center">All Orders</h1>
       </div>
         <table class="table mt-5">
   <thead>
     <tr>
       <th scope="col">Date</th>
+      <th scope="col">Name</th>
       <th scope="col">Email</th>
       <th scope="col">Mobile No</th>
       <th scope="col">Address</th>
@@ -18,9 +18,10 @@
     </tr>
   </thead>
   <tbody>
-      {{#each orders}}
+      {{#each items}}
     <tr>
       <td>{{this.Date}}</td>
+      <td>{{this.SHIPPING.username}}</td>
       <td>{{this.SHIPPING.email}}</td>
        <td>{{this.SHIPPING.mobile}}</td>
       <td>{{this.SHIPPING.address}}</td>
@@ -28,7 +29,7 @@
        <td>{{this.paymentMethod}}</td>
       <td>{{this.status}}</td>
       
-    <td><a href="/view-order-products/{{this._id}}" style="height:auto" class="btn btn-success">View Product</a></td>
+    <td><a href="/admin/view-order-products/{{this._id}}" style="height:auto" class="btn btn-success">View Product</a></td>
     
     </tr>
   

@@ -1,0 +1,31 @@
+<section>
+    <div class="container">
+        <h1 class="text-center">All Users</h1>
+<table class="table mt-3">
+  <thead>
+    <tr>
+     
+      <th scope="col">Id</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Second Name</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#each users}}
+    <tr>
+  
+    
+      <td>{{this._id}}</td>
+      <td>{{this.fname}}</td>
+      <td>{{this.lname}}</td>
+       <td>{{this.Email}}</td>
+     
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<hr>
+    </div>          
+
+</section>

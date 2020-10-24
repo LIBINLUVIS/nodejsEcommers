@@ -78,16 +78,22 @@ router.post("/login",function(req,res){
   })
 });
 router.get('/cart',verifylogin,async(req,res)=>{
-let count=await adduser.procount(req.session.user._id)
+let cartcheck=await adduser.cartcheck(req.session.user._id)
 
+if(cartcheck==null){
+  res.render('user/null-cart')
+}else{
+let count=await adduser.procount(req.session.user._id)
 if(count!=0){
   let products=await adduser.cartitems(req.session.user._id)
 let total=await adduser.totalprice(req.session.user._id)
 res.render('user/cart',{products,total,user:req.session.user._id})
 }            
 else{
-   res.render('user/cart')
-}  
+   res.render('user/null-cart')
+}
+}
+
 })
 
 router.get('/add-to-cart/:id',(req,res)=>{
@@ -118,6 +124,7 @@ router.get('/cod',(req,res)=>{
   res.render('user/payment-cod',{user})
 })
 router.post('/cod-payment',async(req,res)=>{
+  console.log(req.body)
   let user=req.session.user
   let products=await adduser.getcartproductlist(req.session.user._id)
   let totalprice=await adduser.totalprice(req.body.userid)
@@ -127,8 +134,8 @@ router.post('/cod-payment',async(req,res)=>{
 })
 router.get('/orders',async(req,res)=>{
   let orders=await adduser.getorders(req.session.user._id)
-  console.log(orders)
-  res.render('user/orderlist',{user:req.session.user,orders,orders})
+
+  res.render('user/orderlist',{user:req.session.user,orders})
 })
 router.get('/view-order-products/:id',async(req,res)=>{
   let products=await adduser.getorderproduct(req.params.id)
@@ -153,7 +160,18 @@ router.post('/online-razorpay',async(req,res)=>{
   
 })
 router.post('/verify-payment',(req,res)=>{
-  
+  adduser.verifypayment(req.body).then(()=>{
+       adduser.changestatus(req.body['order[receipt]']).then(()=>{
+         console.log("payment success")
+         res.json({status:true})
+       })
+  }).catch((err)=>{
+    console.log(err);
+    res.json({status:false,errMsg:''})
+  })
+})
+router.get('/online-success',(req,res)=>{
+  res.render("user/payment")
 })
 
 
