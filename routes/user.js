@@ -104,6 +104,7 @@ router.get('/add-to-cart/:id',(req,res)=>{
 router.post('/change-product-quantity',(req,res,next)=>{
   
    adduser.changequantity(req.body).then(async(response)=>{ 
+     
     response.total=await adduser.totalprice(req.body.user)
       res.json(response)
    })
@@ -134,8 +135,13 @@ router.post('/cod-payment',async(req,res)=>{
 })
 router.get('/orders',async(req,res)=>{
   let orders=await adduser.getorders(req.session.user._id)
-
-  res.render('user/orderlist',{user:req.session.user,orders})
+  let countitems=orders.length
+  if(countitems==0){
+    res.render('user/empty-cart')
+  }else{
+    res.render('user/orderlist',{user:req.session.user,orders})
+  }
+ 
 })
 router.get('/view-order-products/:id',async(req,res)=>{
   let products=await adduser.getorderproduct(req.params.id)

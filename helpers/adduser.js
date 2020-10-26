@@ -140,6 +140,10 @@ module.exports={
   },
   changequantity:(details)=>{
       count=parseInt(details.count)
+    //   cart=details.cart
+    //   cartpro=cart.length
+    //   console.log(cartpro)
+
       details.quantity=parseInt(details.quantity)
        return new Promise((resolve,reject)=>{
            if(details.count==-1 && details.quantity==1){
@@ -160,6 +164,7 @@ module.exports={
             resolve({status:true})
            })
           }
+
       })
   },
 removecartproduct:(details)=>{
